@@ -1,0 +1,40 @@
+task: detection
+
+evaluator:
+  type: CocoEvaluator
+  iou_types: ['bbox', ]
+
+num_classes: 5
+remap_mscoco_category: False
+
+train_dataloader:
+  type: DataLoader
+  dataset:
+    type: YOLOOBBDetection
+    img_folder: ../dataset/DS202606042752_v1.0_yolo/images/train/
+    ann_folder: ../dataset/DS202606042752_v1.0_yolo/labels/train/
+    class_file: ../dataset/DS202606042752_v1.0_yolo/classes.txt
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: True
+  num_workers: 4
+  drop_last: True
+  collate_fn:
+    type: BatchImageCollateFunction
+
+val_dataloader:
+  type: DataLoader
+  dataset:
+    type: YOLOOBBDetection
+    img_folder: ../dataset/DS202606042752_v1.0_yolo/images/val/
+    ann_folder: ../dataset/DS202606042752_v1.0_yolo/labels/val/
+    class_file: ../dataset/DS202606042752_v1.0_yolo/classes.txt
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: False
+  num_workers: 4
+  drop_last: False
+  collate_fn:
+    type: BatchImageCollateFunction

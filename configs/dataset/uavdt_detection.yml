@@ -1,0 +1,42 @@
+task: detection
+
+evaluator:
+  type: CocoEvaluator
+  iou_types: ['bbox', ]
+
+num_classes: 3
+remap_mscoco_category: False
+
+train_dataloader:
+  type: DataLoader
+  dataset:
+    type: UAVDTDetection
+
+    img_folder: ../dataset/UAV-benchmark-M/
+    ann_folder: ../dataset/UAV-benchmark-MOTD_v1.0/GT/
+    split_file: ../dataset/M_attr/train/
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: True
+  num_workers: 4
+  drop_last: True
+  collate_fn:
+    type: BatchImageCollateFunction
+
+val_dataloader:
+  type: DataLoader
+  dataset:
+    type: UAVDTDetection
+
+    img_folder: ../dataset/UAV-benchmark-M/
+    ann_folder: ../dataset/UAV-benchmark-MOTD_v1.0/GT/
+    split_file: ../dataset/M_attr/test/
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: False
+  num_workers: 4
+  drop_last: False
+  collate_fn:
+    type: BatchImageCollateFunction

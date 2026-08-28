@@ -1,0 +1,53 @@
+__include__: [
+  '../dataset/codrone_detection.yml',
+  '../runtime.yml',
+  './include/dataloader.yml',
+  './include/optimizer.yml',
+  './include/rtdetrv2_r50vd.yml',
+]
+
+output_dir: ./output/codrone_p3sr_ega_sgw
+
+PResNet:
+  depth: 18
+  freeze_at: -1
+  freeze_norm: False
+  pretrained: True
+  return_stage0: True
+
+RTDETR:
+  type: RTDETROptimized
+  backbone: PResNet
+  encoder: HybridEncoder
+  decoder: RTDETRTransformerv2
+  p3_sr_channels: 256
+  p3_sr_upscale: 2
+  use_ega: True
+  stage1_channels: 64
+
+HybridEncoder:
+  in_channels: [128, 256, 512]
+  expansion: 0.5
+
+RTDETRTransformerv2:
+  num_layers: 3
+  feat_strides: [4, 16, 32]
+
+RTDETRCriterionv2:
+  use_sgw_loss: True
+  sgw_tau: 1.5
+  sgw_gamma: 100.0
+
+epoches: 120
+
+train_dataloader:
+  total_batch_size: 8
+  dataset:
+    transforms:
+      policy:
+        epoch: 117
+  collate_fn:
+    scales: ~
+
+val_dataloader:
+  total_batch_size: 8

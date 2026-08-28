@@ -1,0 +1,19 @@
+print_freq: 300
+eval_print_freq: 100
+
+output_dir: './output/exp'
+checkpoint_freq: 10
+
+sync_bn: True
+find_unused_parameters: False
+
+use_amp: False
+scaler:
+  type: GradScaler
+  enabled: True
+
+use_ema: False
+ema:
+  type: ModelEMA
+  decay: 0.9999
+  warmups: 2000

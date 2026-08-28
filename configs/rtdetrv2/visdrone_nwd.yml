@@ -1,0 +1,10 @@
+__include__: [
+  './visdrone.yml',
+]
+
+output_dir: ./output/visdrone_nwd
+
+RTDETRCriterionv2:
+  box_loss_type: nwd
+  nwd_constant: 12.8
+  nwd_image_size: 640

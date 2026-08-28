@@ -1,0 +1,39 @@
+task: detection
+
+evaluator:
+  type: CocoEvaluator
+  iou_types: ['bbox', ]
+
+num_classes: 12
+
+train_dataloader:
+  type: DataLoader
+  dataset:
+    type: CODroneDetection
+    root: ../dataset/CODrone/
+    ann_file: train.txt
+    label_file: label_list.txt
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: True
+  num_workers: 4
+  drop_last: True
+  collate_fn:
+    type: BatchImageCollateFunction
+
+val_dataloader:
+  type: DataLoader
+  dataset:
+    type: CODroneDetection
+    root: ../dataset/CODrone/
+    ann_file: val.txt
+    label_file: label_list.txt
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: False
+  num_workers: 4
+  drop_last: False
+  collate_fn:
+    type: BatchImageCollateFunction

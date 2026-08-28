@@ -1,0 +1,44 @@
+task: detection
+
+evaluator:
+  type: CocoEvaluator
+  iou_types: ['bbox', ]
+
+num_classes: 20
+remap_mscoco_category: False
+
+RTDETRPostProcessor:
+  label2category: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+
+train_dataloader:
+  type: DataLoader
+  dataset:
+    type: CocoDetection
+
+    img_folder: ../dataset/DIOR/
+    ann_file: ../dataset/DIOR/coco_annotations/instances_trainval.json
+    return_masks: False
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: True
+  num_workers: 4
+  drop_last: True
+  collate_fn:
+    type: BatchImageCollateFunction
+
+val_dataloader:
+  type: DataLoader
+  dataset:
+    type: CocoDetection
+    img_folder: ../dataset/DIOR/
+    ann_file: ../dataset/DIOR/coco_annotations/instances_test.json
+    return_masks: False
+    transforms:
+      type: Compose
+      ops: ~
+  shuffle: False
+  num_workers: 4
+  drop_last: False
+  collate_fn:
+    type: BatchImageCollateFunction

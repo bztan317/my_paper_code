@@ -1,0 +1,23 @@
+PResNet:
+  freeze_at: -1
+  freeze_norm: False
+  pretrained: True
+  return_stage0: True
+
+RTDETR:
+  type: RTDETROptimized
+  backbone: PResNet
+  encoder: HybridEncoder
+  decoder: RTDETRTransformerv2
+  p3_sr_channels: 256
+  p3_sr_upscale: 2
+  use_ega: True
+  stage1_channels: 256
+
+RTDETRTransformerv2:
+  feat_strides: [4, 16, 32]
+
+RTDETRCriterionv2:
+  use_sgw_loss: True
+  sgw_tau: 1.5
+  sgw_gamma: 100.0
