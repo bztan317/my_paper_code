@@ -1,0 +1,15 @@
+output/
+outputs/
+logs/
+*.log
+__pycache__/
+*.py[cod]
+*.pth
+*.pt
+*.onnx
+*.engine
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache/
+.idea/
+.vscode/
