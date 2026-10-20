@@ -9,11 +9,20 @@ __all__ = ["RTDETROptimized"]
 class RTDETROptimized(RTDETR):
 
     def __init__(
-        self, backbone, encoder, decoder, p3_sr_channels=256, p3_sr_upscale=2, **kwargs
+        self,
+        backbone,
+        encoder,
+        decoder,
+        p3_sr_channels=256,
+        p3_sr_upscale=2,
+        p3_sr_variant="full",
+        **kwargs,
     ):
         super().__init__(backbone, encoder, decoder, **kwargs)
         self.p3_sr = P3SpatialReconstruction(
-            channels=p3_sr_channels, upscale=p3_sr_upscale
+            channels=p3_sr_channels,
+            upscale=p3_sr_upscale,
+            variant=p3_sr_variant,
         )
 
     def forward(self, x, targets=None):
