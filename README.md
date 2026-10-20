@@ -79,6 +79,23 @@ Other paper datasets use the corresponding `aitod`, `uavdt`, and `dior`
 configurations in `configs/rtdetrv2/`. CoDrone YAML files are supplementary
 configurations and are not used by the manuscript's reported tables.
 
+P3SR component ablation on VisDrone2019 (one YAML per setting):
+
+| Setting | Config |
+| --- | --- |
+| Baseline (no P3SR) | `configs/rtdetrv2/visdrone.yml` |
+| Intermediate P3SR variants | `configs/rtdetrv2/p3sr_ablation/*.yml` |
+| Full P3SR (default module) | `configs/rtdetrv2/visdrone_p3sr.yml` |
+
+Example:
+
+```bash
+python tools/train.py -c configs/rtdetrv2/p3sr_ablation/bilinear.yml --use-amp
+```
+
+Each ablation YAML sets `RTDETR.p3_sr_variant` and writes to its own
+`output_dir` under `./output/p3sr_ablation/`.
+
 ## Evaluation
 
 ```bash
