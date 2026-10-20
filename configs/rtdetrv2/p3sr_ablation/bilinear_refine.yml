@@ -1,0 +1,59 @@
+# 启动训练命令:
+# python tools/train.py -c configs/rtdetrv2/p3sr_ablation/bilinear_refine.yml --use-amp --seed=0
+# baseline: configs/rtdetrv2/visdrone.yml | full: configs/rtdetrv2/visdrone_p3sr.yml
+__include__: [
+  '../../dataset/visdrone2019_detection.yml',
+  '../../runtime.yml',
+  '../include/dataloader.yml',
+  '../include/optimizer.yml',
+  '../include/rtdetrv2_r50vd.yml',
+]
+
+output_dir: ./output/p3sr_ablation/seed0/bilinear_refine
+
+PResNet:
+  depth: 18
+  freeze_at: -1
+  freeze_norm: False
+  pretrained: True
+  # return_idx 维持 [1, 2, 3] 以获取标准的 P3/P4/P5
+
+RTDETR:
+  type: RTDETROptimized       # [核心改动]: 替换默认检测器为带有 P3SR 的架构类
+  backbone: PResNet
+  encoder: HybridEncoder
+  decoder: RTDETRTransformerv2
+  p3_sr_channels: 256        # [超参数]: P3SR 超分辨特征的通道数
+  p3_sr_upscale: 2           # [超参数]: P3SR PixelShuffle 上采样的倍数 (80x80 -> 160x160)
+  p3_sr_variant: bilinear_refine  # [消融]: 双线性上采样 + refine，无双线性残差
+
+HybridEncoder:
+  in_channels: [128, 256, 512]
+  expansion: 0.5
+
+RTDETRTransformerv2:
+  num_layers: 3
+  feat_strides: [4, 16, 32]  # [核心改动]: 因为 P3 放大两倍，所以第一层特征步长必须从 8 改为 4
+  feat_channels: [256, 256, 256]
+  num_points: [4, 4, 4]
+
+epoches: 120
+
+optimizer:
+  type: AdamW
+  params:
+    -
+      params: '^(?=.*(?:norm|bn)).*$'
+      weight_decay: 0.
+
+train_dataloader:
+  total_batch_size: 8
+  dataset:
+    transforms:
+      policy:
+        epoch: 117
+  collate_fn:
+    scales: ~
+
+val_dataloader:
+  total_batch_size: 8
